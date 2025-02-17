@@ -128,3 +128,27 @@ test['FareBand'] = pd.qcut(test['Fare'], 4,
 # drop Fare values
 train = train.drop(['Fare'], axis=1)
 test = test.drop(['Fare'], axis=1)
+
+
+from sklearn.model_selection import train_test_split
+
+# Drop the Survived and PassengerId
+# column from the trainset
+predictors = train.drop(['Survived', 'PassengerId'], axis=1)
+target = train["Survived"]
+x_train, x_val, y_train, y_val = train_test_split(
+    predictors, target, test_size=0.2, random_state=0)
+
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+randomforest = RandomForestClassifier()
+
+# Fit the training data along with its output
+randomforest.fit(x_train, y_train)
+y_pred = randomforest.predict(x_val)
+
+# Find the accuracy score of the model
+acc_randomforest = round(accuracy_score(y_pred, y_val) * 100, 2)
+print(acc_randomforest)
