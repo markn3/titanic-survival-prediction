@@ -175,8 +175,6 @@ y_pred = gbclassifier.predict(x_val)
 acc_gbclassifier = round(accuracy_score(y_pred, y_val) * 100, 2)
 print(f"Gradient Boosting Classifier: {acc_gbclassifier}")
 
-
-
 # Stacking
 # Define base learners (mixing bagging and boosting)
 base_learners = [
