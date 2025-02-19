@@ -4,6 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+warnings.filterwarnings("ignore")
+
 train = pd.read_csv('./data/train.csv')
 test = pd.read_csv('./data/test.csv')
 
@@ -146,7 +148,7 @@ y_pred = randomforest.predict(x_val)
 
 # Find the accuracy score of the model
 acc_randomforest = round(accuracy_score(y_pred, y_val) * 100, 2)
-print(acc_randomforest)
+print(f"random forest: {acc_randomforest}")
 
 # AdaBoost (boosting)
 adaboost = AdaBoostClassifier()
