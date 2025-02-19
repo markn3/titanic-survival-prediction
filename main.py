@@ -140,10 +140,11 @@ x_train, x_val, y_train, y_val = train_test_split(
     predictors, target, test_size=0.2, random_state=0)
 
 
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.metrics import accuracy_score
 
 randomforest = RandomForestClassifier()
+adaboost = AdaBoostClassifier()
 
 # Fit the training data along with its output
 randomforest.fit(x_train, y_train)
@@ -152,3 +153,12 @@ y_pred = randomforest.predict(x_val)
 # Find the accuracy score of the model
 acc_randomforest = round(accuracy_score(y_pred, y_val) * 100, 2)
 print(acc_randomforest)
+
+
+# AdaBoost
+adaboost.fit(x_train, y_train)
+y_pred = adaboost.predict(x_val)
+
+# find the accuracy of adaboost
+acc_adaboost = round(accuracy_score(y_pred, y_val) * 100, 2)
+print(f"Adaboost: {acc_adaboost}")
