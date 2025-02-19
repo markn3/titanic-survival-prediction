@@ -140,11 +140,12 @@ x_train, x_val, y_train, y_val = train_test_split(
     predictors, target, test_size=0.2, random_state=0)
 
 
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, StackingClassifier, GradientBoostingClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression
 
+# Random forest (bagging)
 randomforest = RandomForestClassifier()
-adaboost = AdaBoostClassifier()
 
 # Fit the training data along with its output
 randomforest.fit(x_train, y_train)
@@ -154,11 +155,49 @@ y_pred = randomforest.predict(x_val)
 acc_randomforest = round(accuracy_score(y_pred, y_val) * 100, 2)
 print(acc_randomforest)
 
-
-# AdaBoost
+# AdaBoost (boosting)
+adaboost = AdaBoostClassifier()
+# Fit the training data along with its output
 adaboost.fit(x_train, y_train)
 y_pred = adaboost.predict(x_val)
 
 # find the accuracy of adaboost
 acc_adaboost = round(accuracy_score(y_pred, y_val) * 100, 2)
 print(f"Adaboost: {acc_adaboost}")
+
+# Gradient Boosting Classifier (boosting)
+gbclassifier = GradientBoostingClassifier()
+# Fit the training data along with its output
+gbclassifier.fit(x_train, y_train)
+y_pred = gbclassifier.predict(x_val)
+
+# find the accuracy of adaboost
+acc_gbclassifier = round(accuracy_score(y_pred, y_val) * 100, 2)
+print(f"Gradient Boosting Classifier: {acc_gbclassifier}")
+
+
+
+# Stacking
+# Define base learners (mixing bagging and boosting)
+base_learners = [
+    ('rf', RandomForestClassifier(n_estimators=100, random_state=42)),  # Bagging
+    ('gb', GradientBoostingClassifier(n_estimators=100, random_state=42)),  # Boosting
+    ('ab', AdaBoostClassifier(n_estimators=100, random_state=42))  # Boosting
+]
+
+# Define the meta-model (Logistic Regression works well as a final estimator)
+meta_model = LogisticRegression()
+
+# Create the stacking classifier
+stacking_model = StackingClassifier(estimators=base_learners, final_estimator=meta_model)
+
+# Train the model
+stacking_model.fit(x_train, y_train)
+
+# Predict and evaluate
+y_pred = stacking_model.predict(x_val)
+acc_stacking = round(accuracy_score(y_pred, y_val) * 100, 2)
+print(f"stacking: {acc_stacking}")
+
+
+
