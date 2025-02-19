@@ -77,14 +77,8 @@ rare_age = train[train["Title"] == 6]["AgeGroup"].mode()  # Adult
 age_title_mapping = {1: "Young Adult", 2: "Student",
                      3: "Adult", 4: "Baby", 5: "Adult", 6: "Adult"}
 
-for x in range(len(train["AgeGroup"])):
-    if train["AgeGroup"][x] == "Unknown":
-        train["AgeGroup"][x] = age_title_mapping[train["Title"][x]]
-
-for x in range(len(test["AgeGroup"])):
-    if test["AgeGroup"][x] == "Unknown":
-        test["AgeGroup"][x] = age_title_mapping[test["Title"][x]]
-
+train.loc[train["AgeGroup"] == "Unknown", "AgeGroup"] = train["Title"].map(age_title_mapping)
+test.loc[test["AgeGroup"] == "Unknown", "AgeGroup"] = test["Title"].map(age_title_mapping)
 
 # map each Age value to a numerical value
 age_mapping = {'Baby': 1, 'Child': 2, 'Teenager': 3,
@@ -112,11 +106,10 @@ train['Embarked'] = train['Embarked'].map(embarked_mapping)
 test['Embarked'] = test['Embarked'].map(embarked_mapping)
 
 
-for x in range(len(test["Fare"])):
-    if pd.isnull(test["Fare"][x]):
-        pclass = test["Pclass"][x]  # Pclass = 3
-        test["Fare"][x] = round(
-            train[train["Pclass"] == pclass]["Fare"].mean(), 4)
+for x in range(len(test)):
+    if pd.isnull(test.loc[x, "Fare"]):
+        pclass = test.loc[x, "Pclass"]
+        test.loc[x, "Fare"] = round(train[train["Pclass"] == pclass]["Fare"].mean(), 4)
 
 # map Fare values into groups of 
 # numerical values
